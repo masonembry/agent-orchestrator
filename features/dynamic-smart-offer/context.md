@@ -573,10 +573,11 @@ logicBuilderEventBus.emit('dynamic_smart_offer', {
 
 ---
 
-### Open Questions for This Work
+### Remaining (backend)
 
-- [ ] **Kafka topic config:** How does the Confluent K8s connector know which topics to consume and which Lambda to invoke? Is this configured in the connector manifest (outside this repo)? Nonprod topic names are known — prod TBD.
-- [ ] **WS message type registration:** Does the frontend's WS dispatcher need explicit registration of `'dynamic-smart-offer-event'`, or is dispatch fully generic on `messageType`?
+- [ ] **Kafka-Connect Lambda Sink Connector setup** — Event Streaming team is currently configuring the Confluent K8s connector to invoke our Lambda. [Slack thread](https://asurion-teams.slack.com/archives/C0166CTKQET/p1772822416750369?thread_ts=1772821725.447529&cid=C0166CTKQET)
+- [ ] **Data shape validation** — Once the connector is set up, send test Kafka events and confirm the payload matches our Lambda's Zod schema.
+- [ ] **E2E integration test** — Send test Kafka events end-to-end using the [Event Streaming Portal (nonprod)](https://event-streaming-portal-nonprod.edpapi.npr.aws.asurion.net/kafka-tester) and verify the full path: Kafka → Lambda → EventBridge → WebSocket → frontend store.
 
 ---
 
@@ -630,7 +631,6 @@ logicBuilderEventBus.emit('dynamic_smart_offer', {
 
 ## Open Questions (Tracker)
 
-- ✅ **Backend service:** Logic Builder (not GAIA) drives content generation for MVP. (Moved to Resolved below)
 - [ ] What is the minimum transcript data threshold for DS generation? When in a typical call is it reached?
 - [ ] GAIA event delivery resilience strategy for checklist detection events (missed events, re-send, scheduled re-send)?
   - Can all checked items be sent on every event so a missed one is corrected on the next?
@@ -647,3 +647,5 @@ logicBuilderEventBus.emit('dynamic_smart_offer', {
 - ✅ **Generated offer does not mutate during a call:** Content is "dynamic" at fetch time only. No mid-call updates unless the expert explicitly clicks "Try again" / Refresh.
 - ✅ **Success metrics — ExWo instrumentation:** ExWo needs to emit an `offerGenerated: boolean` event so downstream can track whether the dynamic offer was shown vs. the static fallback.
 - ✅ **Chat is out of scope:** This is a Voice feature. Chat will handle its own implementation separately.
+- ✅ **Kafka topic config:** Nonprod topic names confirmed (`paas.simplr.smart-offer-verizon-exwo`, `paas.simplr.smart-offer-att-exwo`). Connector setup delegated to Event Streaming team.
+- ✅ **WS message type registration:** `messageType: 'dynamic-smart-offer-event'` is dispatched generically — no explicit registration needed on the frontend dispatcher.
