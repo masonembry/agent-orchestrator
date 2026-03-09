@@ -82,4 +82,12 @@ Grouped by repo. Check items off as PRs land.
 ### To Do
 
 - [ ] Add prod connector configs once prod topic names are confirmed from Logic Builder team — Lambda ARN will be `arn:aws:lambda:us-east-1:737463266258:function:EWP-Sales-logic-builder-kafka-sink`
-- [x] Add prod Lambda ARN to `enterprise-eventing` prod connect config (`infra/cdk/configs/prod/us-east-1/prod-connect.ts`)
+
+---
+
+## enterprise-eventing (Kafka Connect Permissions)
+
+### Done
+
+- [x] Nonprod: `EWP-Sales-*logic-builder-kafka-sink` Lambda ARN added to Kafka Connect invoke grants (`infra/cdk/configs/non-prod/us-east-1/non-prod-connect.ts`) — PR open on branch `RDESQ-1900-dynamic-smart-offer`
+- [x] Prod: `EWP-Sales-*logic-builder-kafka-sink` Lambda ARN added to Kafka Connect invoke grants (`infra/cdk/configs/prod/us-east-1/prod-connect.ts`) — PR open on branch `RDESQ-1900-dynamic-smart-offer-prod`

@@ -38,7 +38,7 @@ Cross-repo features live under `features/`. Each directory follows the [OpenSpec
 
 | Feature | Jira | Repos involved |
 |---|---|---|
-| `features/dynamic-smart-offer` | RDESQ-1900 | expert-workspace, expert-workspace-api, expert-workspace-config |
+| `features/dynamic-smart-offer` | RDESQ-1900 | expert-workspace, expert-workspace-api, expert-workspace-config, eds-platform-connectors, enterprise-eventing |
 
 ## Workflows
 

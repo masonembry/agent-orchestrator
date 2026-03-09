@@ -35,7 +35,7 @@ features/<name>/
 
 | Feature | Jira | Repos |
 |---|---|---|
-| [`dynamic-smart-offer`](features/dynamic-smart-offer/proposal.md) | RDESQ-1900 | expert-workspace, expert-workspace-api, expert-workspace-config |
+| [`dynamic-smart-offer`](features/dynamic-smart-offer/proposal.md) | RDESQ-1900 | expert-workspace, expert-workspace-api, expert-workspace-config, eds-platform-connectors, enterprise-eventing |
 
 ## Workflows
 
