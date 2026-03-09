@@ -22,15 +22,29 @@ Each subdirectory under `repos/` contains a `CLAUDE.md` symlink pointing to the 
 
 ## Features
 
-Cross-repo features live under `features/`. Each directory contains context docs, Notion exports, engineering notes, open questions, and an implementation tracker for work that touches multiple repos.
+Cross-repo features live under `features/`. Each directory follows an [OpenSpec](https://dev.to/webdeveloperhyper/how-to-make-ai-follow-your-instructions-more-for-free-openspec-2c85)-inspired structure:
+
+```
+features/<name>/
+  proposal.md   # Why, what, cross-repo impact, success metrics
+  tasks.md      # Implementation checklist grouped by repo
+  design.md     # Architecture, technical decisions, open questions
+  specs/        # Delta specs (ADDED/MODIFIED/REMOVED + WHEN/THEN scenarios)
+  archive/      # Historical docs, Notion exports, completed specs
+```
 
 | Feature | Jira | Repos |
 |---|---|---|
-| [`dynamic-smart-offer`](features/dynamic-smart-offer/context.md) | RDESQ-1900 | expert-workspace, expert-workspace-api, expert-workspace-config |
+| [`dynamic-smart-offer`](features/dynamic-smart-offer/proposal.md) | RDESQ-1900 | expert-workspace, expert-workspace-api, expert-workspace-config |
 
 ## Workflows
 
-Reusable process docs live under `workflows/`. Each is a markdown file describing a repeatable process — starting a new cross-repo feature, cutting a release, syncing context from Notion, etc.
+Reusable process docs live under `workflows/`.
+
+| Workflow | Description |
+|---|---|
+| [`new-feature.md`](workflows/new-feature.md) | Start a new cross-repo feature — directory structure and lifecycle |
+| [`feature-specs.md`](workflows/feature-specs.md) | OpenSpec-style delta spec format for `specs/` files |
 
 ## Usage with Claude Code
 
@@ -42,7 +56,7 @@ Each `repos/*/CLAUDE.md` symlink points to the live file in its source repo, so 
 
 This repo is a living document. Keep it updated as work progresses:
 
-- Update `features/*/context.md` trackers as items are completed
-- Add new feature directories when starting cross-repo work
+- Update `features/*/tasks.md` as items are completed
+- Add new feature directories (following `workflows/new-feature.md`) when starting cross-repo work
 - Add workflow docs to `workflows/` as processes are established
 - Update repo `CLAUDE.md` files (via the source repos) when conventions change

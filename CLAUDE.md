@@ -34,7 +34,7 @@ AWS CDK infrastructure config repo. No CLAUDE.md yet — add one when convention
 
 ## Features
 
-Cross-repo features live under `features/`. Each directory contains context docs, Notion exports, engineering notes, open questions, and implementation trackers for a feature that touches multiple repos.
+Cross-repo features live under `features/`. Each directory follows the [OpenSpec](https://dev.to/webdeveloperhyper/how-to-make-ai-follow-your-instructions-more-for-free-openspec-2c85)-inspired structure: `proposal.md`, `tasks.md`, `design.md`, `specs/` (delta specs with WHEN/THEN scenarios), and `archive/` (historical docs). See `workflows/new-feature.md` for the full lifecycle.
 
 | Feature | Jira | Repos involved |
 |---|---|---|
@@ -42,7 +42,12 @@ Cross-repo features live under `features/`. Each directory contains context docs
 
 ## Workflows
 
-Reusable workflows live under `workflows/`. Each is a markdown file describing a repeatable process — e.g. starting a new cross-repo feature, cutting a release, syncing context from Notion, triaging Jira, etc.
+Reusable workflows live under `workflows/`. Each is a markdown file describing a repeatable process.
+
+| Workflow | Description |
+|---|---|
+| `workflows/new-feature.md` | Start a new cross-repo feature — directory structure, lifecycle (propose → spec → implement → archive) |
+| `workflows/feature-specs.md` | OpenSpec-style delta spec format — ADDED/MODIFIED/REMOVED requirements with WHEN/THEN scenarios |
 
 ## Maintaining This Repo
 
