@@ -44,6 +44,15 @@ Cross-repo features live under `features/`. Each directory contains context docs
 
 Reusable workflows live under `workflows/`. Each is a markdown file describing a repeatable process — e.g. starting a new cross-repo feature, cutting a release, syncing context from Notion, triaging Jira, etc.
 
+## Maintaining This Repo
+
+This repo is a living document. As we work, keep it updated:
+- Document new patterns, conventions, or lessons learned
+- Add new workflow files to `workflows/` as processes are established
+- Add feature docs to `features/` when starting feature work
+- Update repo CLAUDE.md files (via the source repos) when conventions change
+- If something was hard to figure out, write it down so we don't repeat the effort
+
 ## Integrations (planned)
 
 - **Notion** — sync context/PRDs into features/
