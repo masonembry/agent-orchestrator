@@ -28,10 +28,17 @@ THEN `DynamicToneGuidance` renders the awaiting state: neutral `dark.6` backgrou
 WHEN the 2s `isPending` delay is in progress
 THEN `DynamicToneGuidance` renders a skeleton
 
-#### Scenario: Newer DS data arrives while expert is viewing offer
+#### Scenario: Newer DS data arrives while expert is in awaiting state
 
 WHEN a new `"dynamic_smart_offer"` WS event is received
-AND the new data differs from what is currently displayed
+AND the current state is `isAwaitingData` (no valid data yet displayed)
+THEN `useDynamicSmartOffer` automatically triggers the 2s `isPending` delay
+AND after the delay, the latest store data is displayed — no user action required
+
+#### Scenario: Newer DS data arrives while expert is viewing loaded content
+
+WHEN a new `"dynamic_smart_offer"` WS event is received
+AND valid data is already displayed
 THEN `hasNewerData` becomes true
 AND `DynamicToneGuidance` renders a "Show latest" button alongside the current content
 
@@ -40,11 +47,6 @@ AND `DynamicToneGuidance` renders a "Show latest" button alongside the current c
 WHEN the expert clicks "Show latest"
 THEN `isPending` is set to true for 2s
 AND after the delay, the latest data from the store is displayed
-
-#### Scenario: Expert dismisses Tone Guidance
-
-WHEN the expert clicks the dismiss control on `DynamicToneGuidance`
-THEN the Tone Guidance section is hidden for the remainder of the offer flow session
 
 ### Dynamic Core Benefits (Pitch Points)
 
@@ -92,6 +94,7 @@ AND clicking it triggers a 2s `isPending` delay followed by displaying the lates
 
 WHEN content is AI-generated (Tone Guidance or Pitch Points accordion header)
 THEN a ✦ Sparkle icon appears as a consistent visual indicator of AI-generated content
+AND the Sparkle icon inside the violet "Guidance" pill renders white (CSS `brightness(0) invert(1)` filter applied to the white variant)
 
 ---
 
@@ -109,6 +112,13 @@ AND identifies the Core Benefits slot by `section.sectionType === "coreBenefits"
 ---
 
 ## REMOVED Requirements
+
+### Dismiss (close) button on Tone Guidance
+
+#### Scenario: Expert dismisses Tone Guidance
+
+WHEN the expert is viewing any Tone Guidance state (awaiting or loaded)
+THEN there is no close/dismiss button — the section is always visible while enabled
 
 ### "Example of Coverage" / "Personalize the Coverage" section
 

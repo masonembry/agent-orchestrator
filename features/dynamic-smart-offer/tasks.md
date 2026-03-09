@@ -27,8 +27,10 @@ Grouped by repo. Check items off as PRs land.
 - [x] `isError` replaced with `isAwaitingData` throughout — no error state; UI either has data or is waiting
 - [x] "Try again" button renamed to "Show latest"; only renders when `hasNewerData` is true
 - [x] `DynamicToneGuidance` awaiting state — neutral `dark.6` bg, Sparkle icon, "Personalized guidance pending"
-- [x] `handleDismiss` — dismisses tone guidance in awaiting and success states
 - [x] Dev tool `EventEmitter` — draggable popover with GAIA tab + Logic Builder tab
+- [x] Close button removed from `DynamicToneGuidance` — tone guidance is always visible while enabled
+- [x] Sparkle icon in "Guidance" pill is white — CSS `brightness(0) invert(1)` filter on the white Sparkle variant
+- [x] Auto-fetch on `isAwaitingData && hasNewerData` — `useDynamicSmartOffer` triggers the 2s pending delay automatically when an event arrives during the awaiting state; no "Awaiting Data With Newer Available" UI state
 
 ### To Do
 
@@ -68,3 +70,16 @@ Grouped by repo. Check items off as PRs land.
 ### To Do
 
 - [ ] Enable `isDynamicSmartOfferEnabled` flag in nonprod once integration test passes
+
+---
+
+## eds-platform-connectors (Kafka Connector)
+
+### Done
+
+- [x] Nonprod Lambda sink connector configs added for AT&T and Verizon (`ewp-sales-dynamic-smart-offer-att.json`, `ewp-sales-dynamic-smart-offer-verizon.json`) — topics `paas.simplr.smart-offer-att-exwo` / `paas.simplr.smart-offer-verizon-exwo` → `EWP-Sales-logic-builder-kafka-sink` Lambda
+
+### To Do
+
+- [ ] Add prod connector configs once prod topic names are confirmed from Logic Builder team — Lambda ARN will be `arn:aws:lambda:us-east-1:737463266258:function:EWP-Sales-logic-builder-kafka-sink`
+- [x] Add prod Lambda ARN to `enterprise-eventing` prod connect config (`infra/cdk/configs/prod/us-east-1/prod-connect.ts`)
