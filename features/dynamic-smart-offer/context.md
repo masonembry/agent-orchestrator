@@ -585,8 +585,8 @@ logicBuilderEventBus.emit('dynamic_smart_offer', {
 
 ### Done
 
-- [x] `DynamicToneGuidance` component — loading / error / success states, stories, tests
-- [x] `DynamicCoreBenefits` component — loading / error / success / fallback states, stories, tests
+- [x] `DynamicToneGuidance` component — loading / awaiting / success states, stories, tests
+- [x] `DynamicCoreBenefits` component — loading / awaiting / success / fallback states, stories, tests
 - [x] Shared `Sparkle` component with `color` and `size` props
 - [x] `@tabler/icons-react` added to `sales-tools` package
 - [x] `SalesChecklistSection` type updated with `sectionType?` and `enableDynamicContent?`
@@ -646,7 +646,7 @@ logicBuilderEventBus.emit('dynamic_smart_offer', {
 - ✅ **Backend service:** Logic Builder (not GAIA) drives content generation for MVP.
 - ✅ **Pitch point pool ownership:** Logic Builder owns the pool and sends rendered content to the UI. ExWo just renders what it receives. No Contentful entries for pitch points.
 - ✅ **Pitch points are not checked off live:** No detection models for the pitch points section. No live check-off behavior.
-- ✅ **Generated offer does not mutate during a call:** Content is "dynamic" at fetch time only. No mid-call updates unless the expert explicitly clicks "Try again" / Refresh.
+- ✅ **Generated offer does not mutate during a call:** Content is "dynamic" at fetch time only. No mid-call updates unless the expert explicitly clicks "Show latest" (only visible when newer data is available in the store).
 - ✅ **Success metrics — ExWo instrumentation:** ExWo needs to emit an `offerGenerated: boolean` event so downstream can track whether the dynamic offer was shown vs. the static fallback.
 - ✅ **Chat is out of scope:** This is a Voice feature. Chat will handle its own implementation separately.
 - ✅ **Kafka topic config:** Nonprod topic names confirmed (`paas.simplr.smart-offer-verizon-exwo`, `paas.simplr.smart-offer-att-exwo`). Connector setup delegated to Event Streaming team.
