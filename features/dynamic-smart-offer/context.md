@@ -603,20 +603,22 @@ logicBuilderEventBus.emit('dynamic_smart_offer', {
 
 ### Frontend — To Do
 
-- [ ] Implement `handleDismiss` — dismiss tone guidance UI
-- [ ] `isError` state — refine: currently `!isPending && !data.isValid()`. May need time-based threshold ("waited X seconds after entry, still no valid data")
 - [ ] Emit `offerGenerated: boolean` analytics event when first event is received
 - [ ] Remove debug `console.log("MASONLOG", ...)` from `FullOfferChecklist.tsx`
 
 ### Frontend — Done
 
-- [x] `DynamicSmartOffer` class — `toneGuidance`, `pitchPoints`, `isValid()`; with unit tests
+- [x] `DynamicSmartOffer` class — `toneGuidance`, `pitchPoints`, `isValid()`, `equals()`; with unit tests
 - [x] `useDynamicSmartOfferStore` — per-session Zustand store (persist + immer + devtools), `getSession` / `receiveData` / `reset`; with unit tests
 - [x] `useDynamicSmartOfferListener` — subscribes to `logicBuilderEventBus`, converts payload → `DynamicSmartOffer`, writes to store
-- [x] `useDynamicSmartOffer` hook — wraps store + listener, manages `isPending` / `isError` / `isEnabled` / `tryAgain`; with unit tests
+- [x] `useDynamicSmartOffer` hook — wraps store + listener, manages `isPending` / `isAwaitingData` / `isEnabled` / `hasNewerData` / `showLatest`; subscribes to store reactively so `hasNewerData` updates immediately on new WS events; with unit tests
 - [x] `logicBuilderEventBus` — `TinyEmitter` for Logic Builder WS events; `__logicBuilder.emitDynamicSmartOffer()` exposed on `globalThis` in non-prod for console testing
-- [x] `FullOfferChecklist` — uses `useDynamicSmartOffer`, passes `data`/`isPending`/`isError`/`tryAgain` to `DynamicToneGuidance` and `DynamicCoreBenefits`
+- [x] `FullOfferChecklist` — uses `useDynamicSmartOffer`, passes `data`/`isPending`/`isAwaitingData`/`hasNewerData`/`showLatest` to `DynamicToneGuidance` and `DynamicCoreBenefits`
 - [x] Dev tool `EventEmitter` — draggable popover with GAIA tab + Logic Builder tab (merged from two separate tools)
+- [x] `isError` replaced with `isAwaitingData` throughout — no error state; UI either has data (success) or is waiting (awaiting)
+- [x] "Try again" button renamed to "Show latest"; only renders when `hasNewerData` is true (store has valid data differing from what's displayed)
+- [x] `DynamicToneGuidance` awaiting state — neutral `dark.6` bg, Sparkle icon, "Personalized guidance pending"; copy: "Guidance will be available soon." / "Guidance is available. Click 'Show latest' to view." when `hasNewerData`
+- [x] `handleDismiss` — dismisses tone guidance in both awaiting and success states
 
 ### Backend / API
 
