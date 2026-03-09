@@ -53,6 +53,8 @@ This repo is a living document. As we work, keep it updated:
 - Update repo CLAUDE.md files (via the source repos) when conventions change
 - If something was hard to figure out, write it down so we don't repeat the effort
 
+**Keep both `CLAUDE.md` and `README.md` in sync.** They describe the same repo — `CLAUDE.md` is Claude's working reference, `README.md` is the human-facing entry point on GitHub. When structure, features, workflows, or integrations change, update both. If you add a feature to the features table, add it to both. If you add a workflow, add it to both.
+
 ## Integrations (planned)
 
 - **Notion** — sync context/PRDs into features/
