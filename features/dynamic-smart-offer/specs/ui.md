@@ -21,7 +21,10 @@ THEN `DynamicToneGuidance` renders the generated `toneGuidance` string above the
 WHEN the expert clicks into the offer flow
 AND `useDynamicSmartOffer` completes its 2s `isPending` delay
 AND `data.isValid()` returns false
-THEN `DynamicToneGuidance` renders the awaiting state: neutral `dark.6` background, Sparkle icon, "Personalized guidance pending" copy
+THEN `DynamicToneGuidance` renders the awaiting state:
+  - Animated Lottie spark icon (`spark.lottie`) + bold title "Listening for customer cues"
+  - Body text in a `dark.6` rounded card: "Personalized scripts appear after we confirm the customer's devices and lifestyle needs. In the meantime, use the standard script below."
+  - No background on the outer container
 
 #### Scenario: Expert enters offer flow — isPending delay active
 
