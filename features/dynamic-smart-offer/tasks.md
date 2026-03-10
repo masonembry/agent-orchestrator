@@ -34,7 +34,7 @@ Grouped by repo. Check items off as PRs land.
 
 ### To Do
 
-- [ ] Emit `offerGenerated: boolean` analytics event when first WS event is received
+- [x] Emit `DynamicSmartOfferShown` analytics event when dynamic content is first rendered — dispatched once per session in `useDynamicSmartOffer` when `data` first becomes valid
 - [x] Remove debug `console.log("MASONLOG", ...)` from `FullOfferChecklist.tsx`
 - [x] Frontend WS handler for `messageType: 'dynamic-smart-offer-event'` → emit to `logicBuilderEventBus` — generic dispatch in `useWebsocket.ts` (line 235); `DynamicSmartOfferEvent` type + payload registered in `expert-workspace-websocket/src/types.ts`
 
