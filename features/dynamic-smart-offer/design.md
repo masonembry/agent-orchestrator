@@ -27,8 +27,8 @@ Logic Builder → Kafka (ExWo_VZ / ExWo_ATT topics)
 |---|---|---|
 | `paas.simplr.smart-offer-verizon-exwo` | Nonprod + Prod | ExWo — Verizon |
 | `paas.simplr.smart-offer-att-exwo` | Nonprod + Prod | ExWo — AT&T |
-| `paas.simplr.smart-offer-verizon-alpha` | Prod only | Alpha — Verizon |
-| `paas.simplr.smart-offer-att-alpha` | Prod only | Alpha — AT&T |
+
+Alpha topics (`paas.simplr.smart-offer-verizon-alpha`, `paas.simplr.smart-offer-att-alpha`) are out of scope for MVP.
 
 ### WS Message Type
 

@@ -79,10 +79,9 @@ Grouped by repo. Check items off as PRs land.
 
 ### Done
 
-- [x] Nonprod connector configs merged (dev testing + Nonprod): `ewp-sales-dynamic-smart-offer-att.json`, `ewp-sales-dynamic-smart-offer-verizon.json` — dev testing connector is live; Nonprod connector is merged but inactive until Nonprod Lambda is deployed
+- [x] Nonprod connector configs merged: `ewp-sales-dynamic-smart-offer-att.json`, `ewp-sales-dynamic-smart-offer-verizon.json` — account fixed to ExWo Nonprod (`322429462214`); inactive until Nonprod Lambda is deployed; dev testing configs removed
 - [x] Prod connector configs — draft PR #770, do not merge until nonprod testing passes
-  - `paas.simplr.smart-offer-verizon-exwo` / `paas.simplr.smart-offer-att-exwo` (ExWo)
-  - `paas.simplr.smart-offer-verizon-alpha` / `paas.simplr.smart-offer-att-alpha` (Alpha — prod only)
+  - `paas.simplr.smart-offer-verizon-exwo` / `paas.simplr.smart-offer-att-exwo` (ExWo only — alpha out of scope for MVP)
   - Lambda ARN: `arn:aws:lambda:us-east-1:737463266258:function:EWP-Sales-logic-builder-kafka-sink`
 
 ### To Do
@@ -97,7 +96,7 @@ Grouped by repo. Check items off as PRs land.
 ### Done
 
 - [x] Nonprod: `EWP-Sales-*logic-builder-kafka-sink` Lambda ARN added to Kafka Connect invoke grants (`infra/cdk/configs/non-prod/us-east-1/non-prod-connect.ts`) — PR open on branch `RDESQ-1900-dynamic-smart-offer`
-- [x] Prod: `EWP-Sales-*logic-builder-kafka-sink` Lambda ARN added to Kafka Connect invoke grants (`infra/cdk/configs/prod/us-east-1/prod-connect.ts`) — draft PR #9107, do not merge until nonprod testing passes
+- [x] Prod: `EWP-Sales-logic-builder-kafka-sink` Lambda ARN added to Kafka Connect invoke grants (`infra/cdk/configs/prod/us-east-1/prod-connect.ts`) — draft PR #9107, do not merge until nonprod testing passes; exact function name (no wildcard, no PR env in prod)
 
 ### To Do
 
