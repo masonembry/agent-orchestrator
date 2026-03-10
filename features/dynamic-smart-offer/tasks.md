@@ -35,8 +35,8 @@ Grouped by repo. Check items off as PRs land.
 ### To Do
 
 - [ ] Emit `offerGenerated: boolean` analytics event when first WS event is received
-- [ ] Remove debug `console.log("MASONLOG", ...)` from `FullOfferChecklist.tsx`
-- [ ] Frontend WS handler for `messageType: 'dynamic-smart-offer-event'` → emit to `logicBuilderEventBus`
+- [x] Remove debug `console.log("MASONLOG", ...)` from `FullOfferChecklist.tsx`
+- [x] Frontend WS handler for `messageType: 'dynamic-smart-offer-event'` → emit to `logicBuilderEventBus` — generic dispatch in `useWebsocket.ts` (line 235); `DynamicSmartOfferEvent` type + payload registered in `expert-workspace-websocket/src/types.ts`
 
 ---
 
@@ -54,9 +54,10 @@ Grouped by repo. Check items off as PRs land.
 
 ### To Do
 
-- [ ] Kafka-Connect Lambda Sink Connector setup — Event Streaming team configuring Confluent K8s connector to invoke Lambda ([Slack thread](https://asurion-teams.slack.com/archives/C0166CTKQET/p1772822416750369?thread_ts=1772821725.447529&cid=C0166CTKQET))
-- [ ] Data shape validation — confirm Kafka payload matches Lambda Zod schema once connector is live
-- [ ] E2E integration test — send test events via [Event Streaming Portal (nonprod)](https://event-streaming-portal-nonprod.edpapi.npr.aws.asurion.net/kafka-tester); verify Kafka → Lambda → EventBridge → WebSocket → frontend store
+- [ ] E2E integration test — can run NOW against PR environment Lambda (already deployed, Kafka integration live); send test events via [Event Streaming Portal (nonprod)](https://event-streaming-portal-nonprod.edpapi.npr.aws.asurion.net/kafka-tester); verify Kafka → Lambda → EventBridge → WebSocket → frontend store
+- [ ] Data shape validation — confirm Kafka payload matches Lambda Zod schema (do as part of E2E test above)
+- [ ] Deploy Nonprod Lambda (`EWP-Sales-logic-builder-kafka-sink`) — PR environment Lambda is live but Nonprod Lambda is not yet deployed
+- [ ] After Nonprod Lambda deploy: trigger eds-platform-connectors deploy to activate the Nonprod connector config
 
 ---
 
@@ -66,10 +67,11 @@ Grouped by repo. Check items off as PRs land.
 
 - [x] `isDynamicSmartOfferEnabled` feature flag JSON created in all 6 environments (nonprod, prod, gcp-nonprod, gcp-prod, saas-nonprod, saas-prod) — default `false`, no rules — draft PR #589
 - [x] Contentful CMS: `sectionType` and `enableDynamicContent` fields added to `checklistSection` content type
+- [x] `isDynamicSmartOfferEnabled` enabled in Nonprod (`true`)
 
 ### To Do
 
-- [ ] Enable `isDynamicSmartOfferEnabled` flag in nonprod once integration test passes
+- [ ] Prod: enable `isDynamicSmartOfferEnabled` for a cohort of agents (TBD) as part of prod rollout
 
 ---
 
@@ -77,14 +79,16 @@ Grouped by repo. Check items off as PRs land.
 
 ### Done
 
-- [x] Nonprod Lambda sink connector configs added for AT&T and Verizon (`ewp-sales-dynamic-smart-offer-att.json`, `ewp-sales-dynamic-smart-offer-verizon.json`) — topics `paas.simplr.smart-offer-att-exwo` / `paas.simplr.smart-offer-verizon-exwo` → `EWP-Sales-logic-builder-kafka-sink` Lambda
-
-### Done
-
-- [x] Add prod connector configs — draft PR #770, do not merge until nonprod testing passes
+- [x] Nonprod connector configs merged (dev testing + Nonprod): `ewp-sales-dynamic-smart-offer-att.json`, `ewp-sales-dynamic-smart-offer-verizon.json` — dev testing connector is live; Nonprod connector is merged but inactive until Nonprod Lambda is deployed
+- [x] Prod connector configs — draft PR #770, do not merge until nonprod testing passes
   - `paas.simplr.smart-offer-verizon-exwo` / `paas.simplr.smart-offer-att-exwo` (ExWo)
   - `paas.simplr.smart-offer-verizon-alpha` / `paas.simplr.smart-offer-att-alpha` (Alpha — prod only)
   - Lambda ARN: `arn:aws:lambda:us-east-1:737463266258:function:EWP-Sales-logic-builder-kafka-sink`
+
+### To Do
+
+- [ ] Deploy eds-platform-connectors (Nonprod) after Nonprod Lambda is live — activates the merged connector config
+- [ ] Merge and deploy eds-platform-connectors prod PR #770 after nonprod testing passes
 
 ---
 
@@ -94,3 +98,7 @@ Grouped by repo. Check items off as PRs land.
 
 - [x] Nonprod: `EWP-Sales-*logic-builder-kafka-sink` Lambda ARN added to Kafka Connect invoke grants (`infra/cdk/configs/non-prod/us-east-1/non-prod-connect.ts`) — PR open on branch `RDESQ-1900-dynamic-smart-offer`
 - [x] Prod: `EWP-Sales-*logic-builder-kafka-sink` Lambda ARN added to Kafka Connect invoke grants (`infra/cdk/configs/prod/us-east-1/prod-connect.ts`) — draft PR #9107, do not merge until nonprod testing passes
+
+### To Do
+
+- [ ] Merge and confirm deployment of prod PR #9107 as part of prod rollout — must land before prod eds-platform-connectors connector is activated
