@@ -23,12 +23,12 @@ Logic Builder → Kafka (ExWo_VZ / ExWo_ATT topics)
 
 ### Kafka Topics
 
-| Topic (Nonprod) | Owner |
-|---|---|
-| `paas.simplr.smart-offer-verizon-exwo` | ExWo — Verizon |
-| `paas.simplr.smart-offer-att-exwo` | ExWo — AT&T |
-
-Prod topic names TBD.
+| Topic | Env | Owner |
+|---|---|---|
+| `paas.simplr.smart-offer-verizon-exwo` | Nonprod + Prod | ExWo — Verizon |
+| `paas.simplr.smart-offer-att-exwo` | Nonprod + Prod | ExWo — AT&T |
+| `paas.simplr.smart-offer-verizon-alpha` | Prod only | Alpha — Verizon |
+| `paas.simplr.smart-offer-att-alpha` | Prod only | Alpha — AT&T |
 
 ### WS Message Type
 

@@ -79,9 +79,12 @@ Grouped by repo. Check items off as PRs land.
 
 - [x] Nonprod Lambda sink connector configs added for AT&T and Verizon (`ewp-sales-dynamic-smart-offer-att.json`, `ewp-sales-dynamic-smart-offer-verizon.json`) — topics `paas.simplr.smart-offer-att-exwo` / `paas.simplr.smart-offer-verizon-exwo` → `EWP-Sales-logic-builder-kafka-sink` Lambda
 
-### To Do
+### Done
 
-- [ ] Add prod connector configs once prod topic names are confirmed from Logic Builder team — Lambda ARN will be `arn:aws:lambda:us-east-1:737463266258:function:EWP-Sales-logic-builder-kafka-sink`
+- [x] Add prod connector configs — draft PR #770 on branch `RDESQ-1900-dynamic-smart-offer-prod`
+  - `paas.simplr.smart-offer-verizon-exwo` / `paas.simplr.smart-offer-att-exwo` (ExWo)
+  - `paas.simplr.smart-offer-verizon-alpha` / `paas.simplr.smart-offer-att-alpha` (Alpha — prod only)
+  - Lambda ARN: `arn:aws:lambda:us-east-1:737463266258:function:EWP-Sales-logic-builder-kafka-sink`
 
 ---
 
