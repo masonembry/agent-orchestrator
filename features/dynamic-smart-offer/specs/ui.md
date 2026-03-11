@@ -1,132 +1,156 @@
 # Dynamic Smart Offer — UI Specs
 
 Delta specifications for `expert-workspace` UI changes.
-Format: [OpenSpec](https://dev.to/webdeveloperhyper/how-to-make-ai-follow-your-instructions-more-for-free-openspec-2c85)
+Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 
 ---
 
 ## ADDED Requirements
 
-### Tone Guidance section
+### Requirement: Tone Guidance section
+`DynamicToneGuidance` MUST render above the offer accordion when the feature is enabled, in one of three states: loading skeleton, awaiting data, or loaded AI-generated content.
 
-#### Scenario: Expert enters offer flow — DS data already in store
+#### Scenario: Loaded state — DS data already in store
 
-WHEN the expert clicks into the offer flow
-AND `useDynamicSmartOffer` completes its 2s `isPending` delay
-AND `data.isValid()` returns true
-THEN `DynamicToneGuidance` renders the generated `toneGuidance` string above the Accordion
+- GIVEN the expert opens the offer flow
+- AND `useDynamicSmartOffer` completes its 2s `isPending` delay
+- AND `data.isValid()` returns `true`
+- WHEN the offer flow renders
+- THEN `DynamicToneGuidance` renders the AI-generated `toneGuidance` string above the Accordion
 
-#### Scenario: Expert enters offer flow — no DS data yet
+#### Scenario: Awaiting state — no DS data yet
 
-WHEN the expert clicks into the offer flow
-AND `useDynamicSmartOffer` completes its 2s `isPending` delay
-AND `data.isValid()` returns false
-THEN `DynamicToneGuidance` renders the awaiting state:
-  - Animated Lottie spark icon (`spark.lottie`) + bold title "Listening for customer cues"
-  - Body text in a `dark.6` rounded card: "Personalized scripts appear after we confirm the customer's devices and lifestyle needs. In the meantime, use the standard script below."
-  - No background on the outer container
+- GIVEN the expert opens the offer flow
+- AND `useDynamicSmartOffer` completes its 2s `isPending` delay
+- AND `data.isValid()` returns `false`
+- WHEN the offer flow renders
+- THEN `DynamicToneGuidance` renders the awaiting state: animated Lottie spark icon, bold "Listening for customer cues" title, and body copy in a neutral rounded card
 
-#### Scenario: Expert enters offer flow — isPending delay active
+#### Scenario: Loading skeleton
 
-WHEN the 2s `isPending` delay is in progress
-THEN `DynamicToneGuidance` renders a skeleton
+- GIVEN the expert opens the offer flow
+- WHEN the 2s `isPending` delay is in progress
+- THEN `DynamicToneGuidance` renders a skeleton placeholder
 
-#### Scenario: Newer DS data arrives while expert is in awaiting state
+#### Scenario: Auto-refresh when new data arrives during awaiting state
 
-WHEN a new `"dynamic_smart_offer"` WS event is received
-AND the current state is `isAwaitingData` (no valid data yet displayed)
-THEN `useDynamicSmartOffer` automatically triggers the 2s `isPending` delay
-AND after the delay, the latest store data is displayed — no user action required
+- GIVEN the expert is in the awaiting state (no valid data displayed)
+- WHEN a new `dynamic_smart_offer` WebSocket event is received with valid data
+- THEN `useDynamicSmartOffer` automatically triggers the 2s `isPending` delay
+- AND after the delay, the latest store data is displayed with no user action required
 
-#### Scenario: Newer DS data arrives while expert is viewing loaded content
+#### Scenario: "Show latest" offered when new data arrives during loaded state
 
-WHEN a new `"dynamic_smart_offer"` WS event is received
-AND valid data is already displayed
-THEN `hasNewerData` becomes true
-AND `DynamicToneGuidance` renders a "Show latest" button alongside the current content
+- GIVEN valid data is already displayed
+- WHEN a new `dynamic_smart_offer` WebSocket event is received
+- THEN `hasNewerData` becomes `true`
+- AND `DynamicToneGuidance` renders a "Show latest" button alongside the current content
 
 #### Scenario: Expert clicks "Show latest"
 
-WHEN the expert clicks "Show latest"
-THEN `isPending` is set to true for 2s
-AND after the delay, the latest data from the store is displayed
+- GIVEN `hasNewerData` is `true` and "Show latest" is visible
+- WHEN the expert clicks "Show latest"
+- THEN a 2s `isPending` delay begins
+- AND after the delay, the latest store data is displayed
 
-### Dynamic Core Benefits (Pitch Points)
+---
 
-#### Scenario: isEnabled and data is valid
+### Requirement: Dynamic Core Benefits (Pitch Points)
+`DynamicCoreBenefits` MUST replace the static Core Benefits section when enabled and data is valid, and MUST fall back to the static section when data is unavailable.
 
-WHEN `isEnabled` is true
-AND `data.isValid()` returns true
-AND the offer flow is not in `isPending`
-THEN `DynamicCoreBenefits` renders the generated pitch points in place of the static Core Benefits section
+#### Scenario: Dynamic data available
 
-#### Scenario: isEnabled and isAwaitingData
+- GIVEN `isEnabled` is `true`
+- AND `data.isValid()` returns `true`
+- AND the offer flow is not in `isPending`
+- WHEN the offer flow renders
+- THEN `DynamicCoreBenefits` renders the AI-generated pitch points in place of the static Core Benefits section
 
-WHEN `isEnabled` is true
-AND `data.isValid()` returns false
-AND the offer flow is not in `isPending`
-THEN `DynamicCoreBenefits` renders the static Core Benefits `ChecklistSection` as the fallback
-AND the static section and the personalized section are never shown simultaneously
+#### Scenario: Awaiting data
 
-#### Scenario: isPending active
+- GIVEN `isEnabled` is `true`
+- AND `data.isValid()` returns `false`
+- AND the offer flow is not in `isPending`
+- WHEN the offer flow renders
+- THEN `DynamicCoreBenefits` renders the static Core Benefits `ChecklistSection` as a fallback
+- AND the static and dynamic sections are never shown simultaneously
 
-WHEN the 2s `isPending` delay is in progress
-THEN `DynamicCoreBenefits` renders a skeleton with a Sparkle icon accordion header
+#### Scenario: Loading skeleton
 
-#### Scenario: isEnabled is false
+- GIVEN the 2s `isPending` delay is in progress
+- WHEN the offer flow renders
+- THEN `DynamicCoreBenefits` renders a skeleton with a Sparkle icon accordion header
 
-WHEN `isEnabled` is false (feature flag off or `enableDynamicContent` not set on the checklist section)
-THEN the standard `ChecklistSection` renders for Core Benefits (no dynamic behavior)
+#### Scenario: Feature disabled
 
-### "Show latest" button (formerly "Try again")
+- GIVEN `isEnabled` is `false`
+- WHEN the offer flow renders
+- THEN the standard `ChecklistSection` renders for Core Benefits with no dynamic behavior
+
+---
+
+### Requirement: "Show latest" button
+The "Show latest" button MUST only be visible when newer Logic Builder data is available in the store.
 
 #### Scenario: No newer data
 
-WHEN `hasNewerData` is false
-THEN no "Show latest" button is rendered
+- GIVEN `hasNewerData` is `false`
+- WHEN the expert views the offer flow
+- THEN no "Show latest" button is rendered
 
 #### Scenario: Newer data available
 
-WHEN `hasNewerData` is true
-THEN "Show latest" is rendered
-AND clicking it triggers a 2s `isPending` delay followed by displaying the latest store data
+- GIVEN `hasNewerData` is `true`
+- WHEN the expert views the offer flow
+- THEN "Show latest" is rendered
+- AND clicking it triggers a 2s `isPending` delay followed by displaying the latest store data
 
-### Sparkle icon
+---
 
-#### Scenario: AI-generated content indicator
+### Requirement: AI content indicator
+A Sparkle (✦) icon MUST appear as a consistent visual indicator on all AI-generated content in the offer flow.
 
-WHEN content is AI-generated (Tone Guidance or Pitch Points accordion header)
-THEN a ✦ Sparkle icon appears as a consistent visual indicator of AI-generated content
-AND the Sparkle icon inside the violet "Guidance" pill renders white (CSS `brightness(0) invert(1)` filter applied to the white variant)
+#### Scenario: AI-generated content rendered
+
+- GIVEN AI-generated content is displayed (Tone Guidance or Pitch Points accordion header)
+- WHEN the expert views the offer flow
+- THEN a Sparkle icon appears as a consistent visual indicator of AI-generated content
 
 ---
 
 ## MODIFIED Requirements
 
-### FullOfferChecklist wiring
+### Requirement: FullOfferChecklist wiring
+`FullOfferChecklist` MUST consume `useDynamicSmartOffer` and delegate rendering to `DynamicToneGuidance` and `DynamicCoreBenefits`.
 
 #### Scenario: Section rendering delegation
 
-WHEN `FullOfferChecklist` renders
-THEN it consumes `useDynamicSmartOffer(sessionId, salesChecklist)`
-AND passes `data`, `isPending`, `isAwaitingData`, `hasNewerData`, `showLatest` to both `DynamicToneGuidance` and `DynamicCoreBenefits`
-AND identifies the Core Benefits slot by `section.sectionType === "coreBenefits" && section.enableDynamicContent`
+- GIVEN `FullOfferChecklist` is rendered with a valid session and sales checklist
+- WHEN the component renders
+- THEN it consumes `useDynamicSmartOffer(sessionId, salesChecklist)`
+- AND passes `data`, `isPending`, `isAwaitingData`, `hasNewerData`, `showLatest` to both `DynamicToneGuidance` and `DynamicCoreBenefits`
+- AND identifies the Core Benefits slot by `section.sectionType === "coreBenefits" && section.enableDynamicContent`
 
 ---
 
 ## REMOVED Requirements
 
-### Dismiss (close) button on Tone Guidance
+### Requirement: Dismiss button on Tone Guidance
+The dismiss (close) button on Tone Guidance MUST NOT be rendered — the section is always visible while the feature is enabled.
 
-#### Scenario: Expert dismisses Tone Guidance
+#### Scenario: Expert is viewing Tone Guidance
 
-WHEN the expert is viewing any Tone Guidance state (awaiting or loaded)
-THEN there is no close/dismiss button — the section is always visible while enabled
+- GIVEN the expert is viewing any Tone Guidance state (awaiting or loaded)
+- WHEN the offer flow renders
+- THEN there is no close/dismiss button on `DynamicToneGuidance`
 
-### "Example of Coverage" / "Personalize the Coverage" section
+---
 
-#### Scenario: Expert is anywhere in the offer flow
+### Requirement: "Example of Coverage" / "Personalize the Coverage" section
+The `CoverageCarousel` section MUST NOT render when the Dynamic Smart Offer feature is enabled.
 
-WHEN the expert is in the offer flow (any state: pending, awaiting, success)
-THEN the "Example of Coverage" / "Personalize the Coverage" (`CoverageCarousel`) section is not rendered
-AND this holds for all MVP states — it is hidden unconditionally in MVP
+#### Scenario: Feature enabled — any offer flow state
+
+- GIVEN `isEnabled` is `true`
+- WHEN the expert is in the offer flow (any state: pending, awaiting, or loaded)
+- THEN the `CoverageCarousel` section is not rendered

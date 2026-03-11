@@ -8,6 +8,7 @@ Homebase for cross-repo engineering work across the Expert Workspace platform. T
 repos/        # Symlinked CLAUDE.md files for each repo — context when working cross-repo
 features/     # Cross-repo feature context: Notion exports, engineering notes, trackers
 workflows/    # Repeatable process docs (markdown)
+openspec/     # OpenSpec source of truth — platform specs and active changes
 ```
 
 ## Repos
@@ -22,14 +23,14 @@ Each subdirectory under `repos/` contains a `CLAUDE.md` symlink pointing to the 
 
 ## Features
 
-Cross-repo features live under `features/`. Each directory follows an [OpenSpec](https://dev.to/webdeveloperhyper/how-to-make-ai-follow-your-instructions-more-for-free-openspec-2c85)-inspired structure:
+Cross-repo features live under `features/`. Each directory follows [OpenSpec](https://github.com/Fission-AI/OpenSpec) structure:
 
 ```
 features/<name>/
   proposal.md   # Why, what, cross-repo impact, success metrics
   tasks.md      # Implementation checklist grouped by repo
   design.md     # Architecture, technical decisions, open questions
-  specs/        # Delta specs (ADDED/MODIFIED/REMOVED + WHEN/THEN scenarios)
+  specs/        # Delta specs (ADDED/MODIFIED/REMOVED + GIVEN/WHEN/THEN scenarios)
   archive/      # Historical docs, Notion exports, completed specs
 ```
 
@@ -44,7 +45,33 @@ Reusable process docs live under `workflows/`.
 | Workflow | Description |
 |---|---|
 | [`new-feature.md`](workflows/new-feature.md) | Start a new cross-repo feature — directory structure and lifecycle |
-| [`feature-specs.md`](workflows/feature-specs.md) | OpenSpec-style delta spec format for `specs/` files |
+| [`feature-specs.md`](workflows/feature-specs.md) | OpenSpec delta spec format — GIVEN/WHEN/THEN scenarios, RFC 2119 keywords |
+
+## OpenSpec
+
+This repo uses [OpenSpec](https://github.com/Fission-AI/OpenSpec) for AI-assisted spec-driven development.
+
+```
+openspec/
+  specs/        # Source of truth — platform behavior, accumulated over time
+    ui/         # Expert Workspace UI specs
+    api/        # Expert Workspace API specs
+    infra/      # CDK, connectors, feature flags
+  changes/      # Active proposed changes (created by /opsx:propose)
+  config.yaml   # Project context injected into agent prompts
+```
+
+**OpenSpec slash commands (Claude Code):**
+
+| Command | Purpose |
+|---|---|
+| `/opsx:propose` | Start a new change — creates proposal, specs, design, tasks in one shot |
+| `/opsx:explore` | Investigate before committing to a change |
+| `/opsx:new` | Start a change scaffold (expanded workflow) |
+| `/opsx:ff` | Fast-forward: create all planning artifacts at once |
+| `/opsx:apply` | Implement tasks from a change |
+| `/opsx:verify` | Validate implementation against specs |
+| `/opsx:archive` | Complete a change — merges delta specs into `openspec/specs/` |
 
 ## Usage with Claude Code
 
@@ -60,3 +87,4 @@ This repo is a living document. Keep it updated as work progresses:
 - Add new feature directories (following `workflows/new-feature.md`) when starting cross-repo work
 - Add workflow docs to `workflows/` as processes are established
 - Update repo `CLAUDE.md` files (via the source repos) when conventions change
+- When a feature ships, run `/opsx:archive` to merge its delta specs into `openspec/specs/`

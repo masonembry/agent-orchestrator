@@ -1,0 +1,50 @@
+schema: spec-driven
+
+context: |
+  This is the agent-orchestrator repo — homebase for cross-repo engineering work
+  across the Expert Workspace platform. It coordinates features that span multiple
+  repos and contains reusable workflows for working with AI agents.
+
+  Platform overview:
+  - expert-workspace: React 19 SPA (pnpm + Turborepo). Primary app is expert-ui —
+    Vite, Mantine 8, Zustand 5, react-router 7, TanStack Query 5.
+  - expert-workspace-api: Node.js monorepo. AWS Lambda + Fastify behind API Gateway,
+    DynamoDB, PostgreSQL (Drizzle), Redis. Docker images for K8s.
+  - expert-workspace-config: AWS CDK infrastructure config repo.
+
+  Repo structure:
+  - repos/: Symlinked CLAUDE.md files for each repo — read before working cross-repo
+  - features/: Cross-repo feature context (proposal, tasks, design, specs/, archive/)
+  - workflows/: Repeatable process docs
+  - openspec/: OpenSpec source of truth specs and active changes
+
+  When creating specs, follow the spec format in workflows/feature-specs.md:
+  - Use GIVEN/WHEN/THEN scenario format
+  - Use RFC 2119 keywords: MUST/SHALL for absolute requirements, SHOULD for
+    recommended, MAY for optional
+  - Keep implementation details in design.md, not specs
+  - One spec file per domain area: ui.md, api.md, infra.md
+
+  Features span multiple repos — tasks.md should be grouped by repo. Each task
+  item should reference its corresponding spec scenario where applicable.
+
+rules:
+  proposal:
+    - Include repos involved and Jira ticket if known
+    - Include success metrics
+    - Include explicit MVP exclusions / post-MVP roadmap
+    - Include constraints and risks
+  specs:
+    - Use GIVEN/WHEN/THEN scenario format (GIVEN is the precondition)
+    - Use RFC 2119 keywords in the requirement statement (MUST, SHALL, SHOULD, MAY)
+    - Keep scenarios atomic — one observable behavior per scenario
+    - Write from the system's perspective, not implementation details
+    - Do not include internal class/function names, library choices, or CSS details
+  design:
+    - Document architecture decisions with reasoning
+    - Include open questions and resolve them with checkmarks when answered
+    - Document cross-repo integration points explicitly
+  tasks:
+    - Group tasks by repo
+    - Reference the spec scenario each task satisfies where possible
+    - Use hierarchical numbering (1.1, 1.2, etc.)

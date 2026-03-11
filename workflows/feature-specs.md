@@ -1,6 +1,8 @@
 # Feature Spec Format
 
-This repo uses a convention adapted from [OpenSpec](https://dev.to/webdeveloperhyper/how-to-make-ai-follow-your-instructions-more-for-free-openspec-2c85) for writing delta specifications in `features/<name>/specs/`. The format structures requirements as explicit, testable scenarios so that AI agents and engineers alike can understand exactly what behavior is expected.
+This repo uses a convention adapted from [OpenSpec](https://github.com/Fission-AI/OpenSpec) for writing delta specifications in `features/<name>/specs/`. The format structures requirements as explicit, testable scenarios so that AI agents and engineers alike can understand exactly what behavior is expected.
+
+See also: `openspec/` for the source-of-truth specs that accumulate as features ship.
 
 ---
 
@@ -12,7 +14,7 @@ Each `specs/` file covers one domain area. Name files by domain:
 features/<name>/specs/
   ui.md       # Frontend component and rendering behavior
   api.md      # Backend endpoints, Lambda handlers, data transforms
-  infra.md    # CDK constructs, IAM, config, feature flags
+  infra.md    # CDK constructs, IAM, Kafka connectors, feature flags
 ```
 
 ---
@@ -34,26 +36,39 @@ Only include sections that apply. Requirements without changes don't appear.
 
 ## Requirement format
 
-Each requirement within a section gets a short title, followed by one or more scenarios:
+Each requirement gets a short title and a requirement statement using RFC 2119 keywords, followed by one or more scenarios:
 
 ```markdown
-### <Requirement title>
+### Requirement: <title>
+<One-line statement using MUST/SHALL/SHOULD/MAY>
 
 #### Scenario: <description>
 
-WHEN <precondition or trigger>
-[AND <additional condition>]
-THEN <expected outcome>
-[AND <additional outcome>]
+- GIVEN <precondition or system state>
+- [AND <additional precondition>]
+- WHEN <trigger or action>
+- [AND <additional trigger>]
+- THEN <expected observable outcome>
+- [AND <additional outcome>]
 ```
 
+**RFC 2119 keywords:**
+
+| Keyword | Meaning |
+|---------|---------|
+| MUST / SHALL | Absolute requirement — no exceptions |
+| SHOULD | Recommended — exceptions exist but must be justified |
+| MAY | Optional |
+
 Rules:
-- Every requirement must have at least one `#### Scenario:`
-- `WHEN` describes the trigger or context
+- Every requirement MUST have at least one `#### Scenario:`
+- `GIVEN` describes the precondition or system state
+- `WHEN` describes the trigger or action
 - `THEN` describes the observable outcome
 - Use `AND` to chain conditions or outcomes
 - Keep scenarios atomic — one behavior per scenario
 - Write from the system's perspective, not implementation details
+- No internal class/function names, library choices, or CSS specifics in specs (those belong in `design.md`)
 
 ---
 
@@ -62,28 +77,30 @@ Rules:
 ```markdown
 ## ADDED Requirements
 
-### Personalized greeting
+### Requirement: Personalized greeting
+The system MUST display a personalized greeting when the user has a display name configured.
 
 #### Scenario: User has a display name set
 
-WHEN the user loads the dashboard
-AND their profile has a `displayName`
-THEN the header renders "Welcome back, <displayName>"
+- GIVEN the user's profile has a `displayName`
+- WHEN the user loads the dashboard
+- THEN the header renders "Welcome back, <displayName>"
 
 #### Scenario: User has no display name
 
-WHEN the user loads the dashboard
-AND their profile has no `displayName`
-THEN the header renders "Welcome back"
+- GIVEN the user's profile has no `displayName`
+- WHEN the user loads the dashboard
+- THEN the header renders "Welcome back"
 
 ## REMOVED Requirements
 
-### Generic static greeting
+### Requirement: Generic static greeting
 
 #### Scenario: Any page load
 
-WHEN the user loads the dashboard
-THEN the static "Hello, Expert" string is not rendered
+- GIVEN any authenticated user
+- WHEN the user loads the dashboard
+- THEN the static "Hello, Expert" string is not rendered
 ```
 
 ---
@@ -96,5 +113,15 @@ Start every spec file with:
 # <Feature> — <Domain> Specs
 
 Delta specifications for `<repo>` changes.
-Format: [OpenSpec](https://dev.to/webdeveloperhyper/how-to-make-ai-follow-your-instructions-more-for-free-openspec-2c85)
+Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 ```
+
+---
+
+## Lifecycle
+
+When a feature ships, its delta specs merge into `openspec/specs/`:
+1. Run `/opsx:archive` — this merges `features/<name>/specs/` deltas into `openspec/specs/<domain>/spec.md`
+2. Move feature artifacts to `features/<name>/archive/`
+
+The `openspec/specs/` accumulates the full source-of-truth picture of the platform over time.

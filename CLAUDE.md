@@ -8,6 +8,7 @@ Homebase for cross-repo engineering work across the Expert Workspace platform. T
 repos/        # Symlinked CLAUDE.md files for each repo — context when working cross-repo
 features/     # Cross-repo feature context: Notion exports, engineering notes, trackers
 workflows/    # Repeatable process docs (markdown)
+openspec/     # OpenSpec source of truth — platform specs and active changes
 ```
 
 ## Repos
@@ -34,7 +35,7 @@ AWS CDK infrastructure config repo. No CLAUDE.md yet — add one when convention
 
 ## Features
 
-Cross-repo features live under `features/`. Each directory follows the [OpenSpec](https://dev.to/webdeveloperhyper/how-to-make-ai-follow-your-instructions-more-for-free-openspec-2c85)-inspired structure: `proposal.md`, `tasks.md`, `design.md`, `specs/` (delta specs with WHEN/THEN scenarios), and `archive/` (historical docs). See `workflows/new-feature.md` for the full lifecycle.
+Cross-repo features live under `features/`. Each directory follows [OpenSpec](https://github.com/Fission-AI/OpenSpec) structure: `proposal.md`, `tasks.md`, `design.md`, `specs/` (delta specs with GIVEN/WHEN/THEN scenarios), and `archive/` (historical docs). See `workflows/new-feature.md` for the full lifecycle.
 
 | Feature | Jira | Repos involved |
 |---|---|---|
@@ -47,7 +48,37 @@ Reusable workflows live under `workflows/`. Each is a markdown file describing a
 | Workflow | Description |
 |---|---|
 | `workflows/new-feature.md` | Start a new cross-repo feature — directory structure, lifecycle (propose → spec → implement → archive) |
-| `workflows/feature-specs.md` | OpenSpec-style delta spec format — ADDED/MODIFIED/REMOVED requirements with WHEN/THEN scenarios |
+| `workflows/feature-specs.md` | OpenSpec delta spec format — ADDED/MODIFIED/REMOVED with GIVEN/WHEN/THEN scenarios and RFC 2119 keywords |
+
+## OpenSpec
+
+This repo uses [OpenSpec](https://github.com/Fission-AI/OpenSpec) (`@fission-ai/openspec`) for AI-assisted spec-driven development.
+
+```
+openspec/
+  specs/        # Source of truth — platform behavior accumulated as features ship
+    ui/         # Expert Workspace UI specs
+    api/        # Expert Workspace API specs
+    infra/      # CDK, Kafka connectors, feature flags
+  changes/      # Active proposed changes (created by /opsx:propose)
+  config.yaml   # Project context injected into all agent prompts
+```
+
+**OpenSpec slash commands for Claude Code:**
+
+| Command | Purpose |
+|---|---|
+| `/opsx:propose` | Start a new change — creates proposal, specs, design, tasks in one shot |
+| `/opsx:explore` | Investigate a problem before committing to a change |
+| `/opsx:new` | Start a change scaffold (expanded workflow — step by step) |
+| `/opsx:ff` | Fast-forward: create all planning artifacts at once |
+| `/opsx:apply` | Implement tasks from a change |
+| `/opsx:verify` | Validate implementation against specs (completeness, correctness, coherence) |
+| `/opsx:archive` | Complete a change — merges delta specs into `openspec/specs/` |
+
+**Workflow:**
+
+For new features: use `/opsx:propose` to create the change in `openspec/changes/`, or create manually in `features/` for broader cross-repo context. When a feature ships, run `/opsx:archive` to merge its delta specs into `openspec/specs/`.
 
 ## Maintaining This Repo
 
@@ -56,9 +87,10 @@ This repo is a living document. As we work, keep it updated:
 - Add new workflow files to `workflows/` as processes are established
 - Add feature docs to `features/` when starting feature work
 - Update repo CLAUDE.md files (via the source repos) when conventions change
+- When a feature ships, archive its delta specs into `openspec/specs/`
 - If something was hard to figure out, write it down so we don't repeat the effort
 
-**Keep both `CLAUDE.md` and `README.md` in sync.** They describe the same repo — `CLAUDE.md` is Claude's working reference, `README.md` is the human-facing entry point on GitHub. When structure, features, workflows, or integrations change, update both. If you add a feature to the features table, add it to both. If you add a workflow, add it to both.
+**Keep both `CLAUDE.md` and `README.md` in sync.** They describe the same repo — `CLAUDE.md` is Claude's working reference, `README.md` is the human-facing entry point on GitHub. When structure, features, workflows, or integrations change, update both.
 
 ## Integrations (planned)
 
