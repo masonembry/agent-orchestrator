@@ -55,8 +55,8 @@ Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 
 ---
 
-### Requirement: Dynamic Core Benefits (Pitch Points)
-`DynamicCoreBenefits` MUST replace the static Core Benefits section when enabled and data is valid, and MUST fall back to the static section when data is unavailable.
+### Requirement: Dynamic Core Benefits (Personalized Benefit + Static Core Benefits)
+`DynamicCoreBenefits` MUST render one personalized benefit above the three static Core Benefits when enabled and data is valid. The static Core Benefits MUST always render (they are required disclosures). When no personalized benefit is available, only the three static Core Benefits render.
 
 #### Scenario: Dynamic data available
 
@@ -64,7 +64,8 @@ Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 - AND `data.isValid()` returns `true`
 - AND the offer flow is not in `isPending`
 - WHEN the offer flow renders
-- THEN `DynamicCoreBenefits` renders the AI-generated pitch points in place of the static Core Benefits section
+- THEN `DynamicCoreBenefits` renders the AI-generated personalized benefit (with Sparkle icon) above the static Core Benefits `ChecklistSection`
+- AND the static Core Benefits are always rendered regardless of dynamic data availability
 
 #### Scenario: Awaiting data
 
@@ -72,14 +73,13 @@ Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 - AND `data.isValid()` returns `false`
 - AND the offer flow is not in `isPending`
 - WHEN the offer flow renders
-- THEN `DynamicCoreBenefits` renders the static Core Benefits `ChecklistSection` as a fallback
-- AND the static and dynamic sections are never shown simultaneously
+- THEN `DynamicCoreBenefits` renders only the static Core Benefits `ChecklistSection` (no personalized benefit slot shown)
 
 #### Scenario: Loading skeleton
 
 - GIVEN the 2s `isPending` delay is in progress
 - WHEN the offer flow renders
-- THEN `DynamicCoreBenefits` renders a skeleton with a Sparkle icon accordion header
+- THEN `DynamicCoreBenefits` renders a skeleton (for the personalized benefit slot) with a Sparkle icon accordion header, followed by the static Core Benefits
 
 #### Scenario: Feature disabled
 

@@ -38,6 +38,7 @@ Grouped by repo. Check items off as PRs land.
 - [x] Remove debug `console.log("MASONLOG", ...)` from `FullOfferChecklist.tsx`
 - [x] Frontend WS handler for `messageType: 'dynamic-smart-offer-event'` → emit to `logicBuilderEventBus` — generic dispatch in `useWebsocket.ts` (line 235); `DynamicSmartOfferEvent` type + payload registered in `expert-workspace-websocket/src/types.ts`
 - [x] Security/observability audit fixes — `partner` added to `DynamicSmartOfferShown`; `DynamicSmartOfferShowLatestClicked` event added; `useDynamicSmartOfferStore.reset()` registered in `setupSessionLifecycleManager`; logging added to `useDynamicSmartOffer` for timer resolution, auto-fetch, and Contentful misconfiguration
+- [ ] **Approach change (legal feedback):** Update `DynamicCoreBenefits` to render one personalized benefit *above* the static Core Benefits (supplement, not replace). Static Core Benefits must always render — they are required regulatory disclosures. When `isAwaitingData`, show only static Core Benefits (no placeholder slot for personalized benefit). When `isPending`, show skeleton for personalized slot + static Core Benefits. Sales checklist detection behavior for the three static benefits is unchanged.
 
 ---
 

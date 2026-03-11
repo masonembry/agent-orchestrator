@@ -59,7 +59,7 @@ Default/empty: `new DynamicSmartOffer("", [])` — `isValid()` returns `false`.
 
 **2. `useDynamicSmartOfferListener`** — subscribes to `logicBuilderEventBus` for `"dynamic_smart_offer"` events, converts payload → `DynamicSmartOffer`, writes to store via `receiveData`.
 
-**3. `useDynamicSmartOffer(sessionId, salesChecklist)`** — main consumption hook:
+**3. `useDynamicSmartOffer(sessionId, salesChecklist)`** — main consumption hook (note: `pitchPoints` stays `string[]` in the event/store; MVP sends one item, future expansion requires no frontend changes):
 ```typescript
 { data: DynamicSmartOffer, isPending: boolean, isAwaitingData: boolean, isEnabled: boolean, hasNewerData: boolean, showLatest: () => void }
 ```
@@ -74,7 +74,8 @@ Default/empty: `new DynamicSmartOffer("", [])` — `isValid()` returns `false`.
 | Section | `isPending` | `isAwaitingData = false, data.isValid()` | `isAwaitingData = true` |
 |---|---|---|---|
 | Tone Guidance | Skeleton | Generated string | Placeholder UI |
-| Pitch Points slot | Skeleton | Generated pitch points | Static Core Benefits fallback |
+| Personalized benefit (above Core Benefits) | Skeleton | Generated benefit (with Sparkle icon) | Not rendered |
+| Static Core Benefits | Rendered (always) | Rendered (always) | Rendered (always) |
 | Example of Coverage | Hidden | Hidden | Hidden |
 | All other sections | Render normally | Render normally | Render normally |
 
@@ -92,7 +93,10 @@ FullOfferChecklist
   └─ Accordion
       └─ [per section]
           ├─ DynamicCoreBenefits   (when sectionType === "coreBenefits" && enableDynamicContent)
-          │     └─ fallbackSlot: ChecklistSectionWithErrorBoundary
+          │     ├─ personalized benefit row (Sparkle icon, when data.isValid())
+          │     │     OR skeleton (when isPending)
+          │     │     OR nothing (when isAwaitingData)
+          │     └─ ChecklistSectionWithErrorBoundary  (static Core Benefits — always rendered)
           └─ ChecklistSectionWithErrorBoundary  (all other sections)
                 └─ ChecklistSection
                     └─ ChecklistItem  (per item)

@@ -37,14 +37,14 @@ Evolve the existing Smart Offer into a context-aware system that dynamically gen
 
 **DS Outputs:**
 1. **Tone Guidance** — concise recommendation on how the expert should frame the offer
-2. **Three Pitch Points** — selected from ~20 pre-approved, marketing-written pitch points, ranked dynamically; light contextual tailoring only (no net-new generation)
+2. **One Personalized Benefit** — selected from a pre-approved, marketing-written pitch pool, ranked dynamically based on transcript signals; light contextual tailoring only (no net-new generation). Sent as a `pitchPoints` array (supports future expansion with no frontend changes).
 
 **UI Changes:**
 1. Tone Guidance section injected above offer scripting
-2. Three Pitch Points replace the current "Core Benefits" section
-3. "Example of Coverage" section hidden (intent fulfilled by personalized pitch points)
+2. One personalized benefit displayed above the three static Core Benefits (four total benefits shown when DS data is available); Core Benefits use exact existing verbiage and remain required per regulatory guidance
+3. "Example of Coverage" section hidden
 4. Manual "Show latest" button — only visible when newer data is available in the store
-5. Static fallback when DS output unavailable (existing three static benefits shown; placeholder for tone guidance)
+5. Static fallback when DS output unavailable (three static Core Benefits shown as today; placeholder for tone guidance); personalized benefit is simply omitted — no separate fallback UI needed for that slot
 
 **Static sections unchanged:** Transition, discovery, engagement, price, ask for sale, ask to send link, all detection models.
 
