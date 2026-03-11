@@ -37,6 +37,7 @@ Grouped by repo. Check items off as PRs land.
 - [x] Emit `DynamicSmartOfferShown` analytics event when dynamic content is first rendered — dispatched once per session in `useDynamicSmartOffer` when `data` first becomes valid
 - [x] Remove debug `console.log("MASONLOG", ...)` from `FullOfferChecklist.tsx`
 - [x] Frontend WS handler for `messageType: 'dynamic-smart-offer-event'` → emit to `logicBuilderEventBus` — generic dispatch in `useWebsocket.ts` (line 235); `DynamicSmartOfferEvent` type + payload registered in `expert-workspace-websocket/src/types.ts`
+- [x] Security/observability audit fixes — `partner` added to `DynamicSmartOfferShown`; `DynamicSmartOfferShowLatestClicked` event added; `useDynamicSmartOfferStore.reset()` registered in `setupSessionLifecycleManager`; logging added to `useDynamicSmartOffer` for timer resolution, auto-fetch, and Contentful misconfiguration
 
 ---
 
@@ -46,16 +47,17 @@ Grouped by repo. Check items off as PRs land.
 
 - [x] Eligibility API: `sectionType` and `enableDynamicContent` mapped in `buildChecklistSections.ts`
 - [x] Types updated in `packages/shared-types/contentful-product-info.ts` and `services/sales/lib/shared/utils/contentful/types.ts` — branch `RDESQ-1900-dynamic-smart-offer`
-- [x] `services/sales/lib/logic-builder-kafka-sink/handlers/handler.lambda.ts` — Lambda handler (batch-aware, latest-record-wins, Zod validation)
-- [x] `services/sales/lib/logic-builder-kafka-sink/handlers/types.ts` — Zod schemas
+- [x] `services/sales/lib/logic-builder-kafka-sink/handlers/handler.lambda.ts` — Lambda handler delegates to `parseKafkaConnectLambdaEvent`
+- [x] `services/sales/lib/logic-builder-kafka-sink/handlers/types.ts` — Zod schemas + `KafkaConnectEvent` / `KafkaConnectLambdaEvent` types confirmed via nonprod observation (`payload.value` is directly JSON-encoded event data)
+- [x] `services/sales/lib/logic-builder-kafka-sink/handlers/parseKafkaConnectLambdaEvent.ts` — JSON-parses `payload.value` from last outer record, Zod-validates; 6 unit tests
 - [x] `services/sales/lib/logic-builder-kafka-sink/src/services/sendDynamicSmartOfferToFrontend.ts` — EventBridge dispatch (`messageType: 'dynamic-smart-offer-event'`, routed by `employeeId`)
 - [x] `services/sales/cdk/constructs/lambdas/createLogicBuilderKafkaSink.ts` — CDK construct; K8s node group invoke grants; EventBridge PutEvents grant
 - [x] `services/sales/cdk/stack.ts` — Lambda wired into sales stack
+- [x] Security/observability audit fixes — `awsRequestId` in logger; parse moved outside try for catch-scope correlation; `withMetrics` at handler boundary (removed from `sendDynamicSmartOfferToFrontend`)
 
 ### To Do
 
-- [ ] E2E integration test — can run NOW against PR environment Lambda (already deployed, Kafka integration live); send test events via [Event Streaming Portal (nonprod)](https://event-streaming-portal-nonprod.edpapi.npr.aws.asurion.net/kafka-tester); verify Kafka → Lambda → EventBridge → WebSocket → frontend store
-- [ ] Data shape validation — confirm Kafka payload matches Lambda Zod schema (do as part of E2E test above)
+- [ ] E2E integration test — send plain `{ sessionId, employeeId, toneGuidance, pitchPoints }` via kafka-tester; verify Kafka → Lambda → EventBridge → WebSocket → frontend store
 - [ ] Deploy Nonprod Lambda (`EWP-Sales-logic-builder-kafka-sink`) — PR environment Lambda is live but Nonprod Lambda is not yet deployed
 - [ ] After Nonprod Lambda deploy: trigger eds-platform-connectors deploy to activate the Nonprod connector config
 

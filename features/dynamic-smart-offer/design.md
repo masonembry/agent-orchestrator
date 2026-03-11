@@ -131,7 +131,11 @@ apps/expert-ui/src/sales-tools/home-product/components/
 
 **Repo:** `expert-workspace-api` / **Service:** `services/sales/`
 
-Lambda is invoked by Confluent K8s Lambda Sink Connector as a batch (`KafkaConnectLambdaEvent = Array<KafkaConnectRecord>`). Takes only the last record (latest value wins).
+Lambda is invoked by Confluent K8s Lambda Sink Connector as a batch (`KafkaConnectLambdaEvent = KafkaConnectEvent[]`). Takes only the last record (latest value wins).
+
+**Confirmed connector shape (observed in nonprod):**
+- `event[n].payload.value` — JSON-encoded string of the event data directly (not an inner-records array)
+- Parser: `JSON.parse(event[last].payload.value)` → Zod validate
 
 **Kafka input schema (Zod-validated):**
 ```typescript
