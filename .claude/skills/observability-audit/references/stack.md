@@ -137,22 +137,30 @@ Lambda handlers have specific observability requirements:
 
 ## Frontend (expert-workspace)
 
-### Logging — `@expert/logging`
+### Logging — `@expert/logging` + `useLogger`
 
 The logging package wraps Pino for browser use. It has two configurable transports: a console transport (for local dev) and an API backend transport (ships logs to the backend). Both have independent log level thresholds set at `initLogging` time.
 
-**Initialization pattern:**
-```ts
-// App entry — called once at startup
-initLogging({ appName, commitHash, channel, logLevel: { api: 'info', console: 'debug' } });
+**The preferred pattern inside React components and hooks is `useLogger`**, not `getLogger` directly. `useLogger` reads from `LoggerContext`, which has session-level context (`sessionId`, `partner`, `callSid`, `chatId`) already bound. This means every log call automatically carries the full session context without repeating it.
 
-// Per module — create a child logger with module context
-const logger = getLogger({ module: 'my-feature' });
+Source: `apps/expert-ui/src/sdk/logging/LoggerProvider.tsx`
+
+**Correct usage:**
+```ts
+// In a component or hook — picks up all session context automatically
+const logger = useLogger({ module: 'IntegratedFlow', supportTeam: 'sales' });
+
+// Logging — bound fields (sessionId, partner, etc.) are included automatically
+logger.info({ someData }, 'Eligibility check completed');
+logger.error({ error }, 'Enrollment failed');
 ```
 
+**`getLogger` is for code outside the React tree** (module-level utilities, non-component service functions). It bypasses `LoggerContext` and will not have session context bound.
+
 **Flag:**
-- `console.log`, `console.error`, `console.warn` in component or service code — use `getLogger` instead
-- Module-level code that creates a logger outside of a function/hook (may run before `initLogging` is called, causing a thrown error)
+- `getLogger(...)` used inside a React component or hook — should be `useLogger(...)` to pick up session context
+- `useLogger()` called without `module` — harder to trace logs to their source in production
+- `console.log`, `console.error`, `console.warn` in component or service code — use `useLogger` instead
 - `logger.error('message')` without `{ error }` — stack trace is lost; should be `logger.error({ error }, 'message')`
 - Logging customer PII in structured fields: account numbers, SSN, phone, email (unless the module explicitly handles this data and logging is intentional and reviewed)
 - `logger.info(...)` for high-frequency events (every message received, every render trigger) — use `debug`
