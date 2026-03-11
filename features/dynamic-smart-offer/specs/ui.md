@@ -55,8 +55,8 @@ Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 
 ---
 
-### Requirement: Dynamic Core Benefits (Personalized Benefit + Static Core Benefits)
-`DynamicCoreBenefits` MUST render one personalized benefit above the three static Core Benefits when enabled and data is valid. The static Core Benefits MUST always render (they are required disclosures). When no personalized benefit is available, only the three static Core Benefits render.
+### Requirement: Dynamic Core Benefits (Personalized Pitch Point + Static Core Benefits)
+The AI-generated pitch point(s) MUST render as the first item(s) **inside** the Core Benefits accordion section — not as a separate accordion section. The static Core Benefits always render after the pitch point (they are required disclosures). When no pitch point is available, only the static Core Benefits render.
 
 #### Scenario: Dynamic data available
 
@@ -64,8 +64,8 @@ Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 - AND `data.isValid()` returns `true`
 - AND the offer flow is not in `isPending`
 - WHEN the offer flow renders
-- THEN `DynamicCoreBenefits` renders the AI-generated personalized benefit (with Sparkle icon) above the static Core Benefits `ChecklistSection`
-- AND the static Core Benefits are always rendered regardless of dynamic data availability
+- THEN `DynamicCoreBenefits` renders the AI-generated pitch point(s) (with Sparkle icon, dark pill styling) as the first item(s) inside the Core Benefits accordion panel
+- AND the static Core Benefits items follow immediately after
 
 #### Scenario: Awaiting data
 
@@ -73,13 +73,13 @@ Format: [OpenSpec](https://github.com/Fission-AI/OpenSpec)
 - AND `data.isValid()` returns `false`
 - AND the offer flow is not in `isPending`
 - WHEN the offer flow renders
-- THEN `DynamicCoreBenefits` renders only the static Core Benefits `ChecklistSection` (no personalized benefit slot shown)
+- THEN no personalized pitch point slot is shown; only the static Core Benefits render inside the accordion
 
 #### Scenario: Loading skeleton
 
 - GIVEN the 2s `isPending` delay is in progress
 - WHEN the offer flow renders
-- THEN `DynamicCoreBenefits` renders a skeleton (for the personalized benefit slot) with a Sparkle icon accordion header, followed by the static Core Benefits
+- THEN a skeleton row (Sparkle icon + skeleton bar) renders as the first item inside the Core Benefits accordion panel, followed by the static Core Benefits
 
 #### Scenario: Feature disabled
 
@@ -147,10 +147,10 @@ The dismiss (close) button on Tone Guidance MUST NOT be rendered — the section
 ---
 
 ### Requirement: "Example of Coverage" / "Personalize the Coverage" section
-The `CoverageCarousel` section MUST NOT render when the Dynamic Smart Offer feature is enabled.
+The "Personalize the Coverage" checklist item (key: `COVERAGE`) MUST NOT render when the Dynamic Smart Offer feature is enabled. The AI pitch point replaces this manual step. This is implemented via `hiddenItemKeys={["COVERAGE"]}` passed to `ChecklistSection` for any coreBenefits section with `enableDynamicContent`.
 
 #### Scenario: Feature enabled — any offer flow state
 
 - GIVEN `isEnabled` is `true`
 - WHEN the expert is in the offer flow (any state: pending, awaiting, or loaded)
-- THEN the `CoverageCarousel` section is not rendered
+- THEN the `COVERAGE` checklist item is not rendered in the Core Benefits section
